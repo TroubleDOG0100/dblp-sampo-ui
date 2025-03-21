@@ -3,21 +3,9 @@
     "rootUrl": "",
     "perspectives": {
         "searchPerspectives": [
-            "perspective1",
-            "perspective2",
-            "perspective3",
-            "perspective4",
-            "fullTextSearch"
+            "perspective1"
         ],
-        "onlyInstancePages": [
-            "manuscripts",
-            "collections",
-            "works",
-            "expressions",
-            "events",
-            "actors",
-            "places"
-        ]
+        "onlyInstancePages":[]
     },
     "localeConfig": {
         "defaultLocale": "en",
