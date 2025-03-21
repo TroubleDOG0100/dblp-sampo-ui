@@ -1,5 +1,5 @@
 {
-    "id": "perspective1",
+    "id": "publications",
     "endpoint": {
         "url": "https://sparql.dblp.org/sparql",
         "useAuth": false,
@@ -18,7 +18,7 @@
     "defaultTab": "table",
     "defaultInstancePageTab": "table",
     "resultClasses": {
-        "perspective1": {
+        "publications": {
             "paginatedResultsConfig": {
                 "tabID": 0,
                 "component": "ResultTable",
@@ -30,7 +30,7 @@
                 "sortDirection": null
             },
             "instanceConfig": {
-                "propertiesQueryBlock": "workProperties",
+                "propertiesQueryBlock": "workPropertiesInstance",
                 "instancePageResultClasses": {
                     "instancePageTable": {
                         "tabID": 0,
@@ -53,8 +53,8 @@
             "component": "Export",
             "tabPath": "export",
             "tabIcon": "CloudDownload",
-            "resultClass": "perspective1",
-            "facetClass": "perspective1"
+            "resultClass": "publications",
+            "facetClass": "publications"
         },
         "knowledgeGraphMetadata": {
             "sparqlQuery": "knowledgeGraphMetadataQuery",
