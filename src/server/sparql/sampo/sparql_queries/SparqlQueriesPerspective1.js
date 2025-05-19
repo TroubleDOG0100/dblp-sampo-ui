@@ -33,6 +33,13 @@ export const workProperties = `
     }
     BIND(COALESCE(?publicationVenueStr2, ?publicationVenueStr) as ?publicationVenue__prefLabel)
 
-    # Data provider varētu kā instance page konkrētām publikācijas tipam.
-    #BIND(?publicationType__id as )
-  `;
+    OPTIONAL {
+      ?id dblp:pagination ?pagination .
+    }
+
+    OPTIONAL {
+      ?id owl:sameAs ?otherIds__id .
+      BIND(STR(?otherIds__id) as ?otherIds__prefLabel)
+      BIND(?otherIds__id as ?otherIds__dataProviderUrl)
+    }
+    `;

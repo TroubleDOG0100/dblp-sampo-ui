@@ -60,7 +60,8 @@ class TextFacet extends React.Component {
   };
 
   hasValidQuery = () => {
-    return this.state.value.length > 2
+    // For Lucene it advised to only perform search when at least 3 characters are entered, for other providers, this is not required.
+    return this.state.value.length > 2 || this.props.facet.textQueryProvider != 'lucene'
   }
 
   render () {

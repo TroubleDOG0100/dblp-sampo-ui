@@ -119,6 +119,26 @@
             "minWidth": 100
         },
         {
+            "id":"pagination",
+            "valueType": "string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 50,
+            "onlyOnInstancePage":true
+        },
+        {
+            "id":"otherIds",
+            "valueType": "object",
+            "makeLink": true,
+            "externalLink": true,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 200,
+            "onlyOnInstancePage":true
+        },
+        {
             "id": "publicationType",
             "valueType": "object",
             "makeLink": false,
@@ -138,14 +158,12 @@
             "textQueryProperty": "dblp:title"
         },
         "publicationYear": {
-            "id": "publicationYear",
             "sortByPredicate":"dblp:yearOfPublication",
-            "valueType": "string",
-            "makeLink": false,
-            "externalLink": false,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 40
+            "containerClass": "six",
+            "facetType": "integer",
+            "filterType": "integerFilter",
+            "typecasting":"BIND(xsd:integer(STR(?valuepublicationYear)) as ?valueAsIntegerpublicationYear)",
+            "predicate": "dblp:yearOfPublication"
         },
         "publicationType":{
             "containerClass": "six",

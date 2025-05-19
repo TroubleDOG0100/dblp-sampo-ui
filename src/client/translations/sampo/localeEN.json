@@ -242,6 +242,18 @@
           "label":"Publication year",
           "description": "The year of publication"
         },
+        "creators":{
+          "label":"Author/Editor",
+          "description": "The publication authors and editors"
+        },
+        "pagination":{
+          "label":"Pagination",
+          "description": "The page numbers where the publication can be found"
+        },
+        "otherIds":{
+          "label":"Related links",
+          "description": "Related links to this entity"
+        },
         "publicationType":{
           "label":"Publication type",
           "description": "The type of publication"
