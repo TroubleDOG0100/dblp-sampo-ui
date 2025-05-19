@@ -25,12 +25,13 @@
                 "tabPath": "table",
                 "tabIcon": "CalendarViewDay",
                 "propertiesQueryBlock": "workProperties",
-                "pagesize": 10,
+                "pagesize": 50,
                 "sortBy": null,
                 "sortDirection": null
             },
             "instanceConfig": {
-                "propertiesQueryBlock": "workPropertiesInstance",
+                "localIDAsURI":true,
+                "propertiesQueryBlock": "workProperties",
                 "instancePageResultClasses": {
                     "instancePageTable": {
                         "tabID": 0,
@@ -78,12 +79,60 @@
             "externalLink": false,
             "sortValues": true,
             "numberedList": false,
-            "minWidth": 250
+            "minWidth": 200
+        },
+        {
+            "id": "publicationYear",
+            "valueType": "string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 40
+        },
+        {
+            "id": "publicationType",
+            "valueType": "object",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 100
         }
     ],
     "facets": {
         "prefLabel": {
-            "sortByPredicate": "rdfs:label"
+            "sortByPredicate": "dblp:title",
+            "containerClass": "one",
+            "facetType": "text",
+            "filterType": "textFilter",
+            "textQueryProvider": "regex",
+            "textQueryProperty": "dblp:title"
+        },
+        "publicationYear": {
+            "id": "publicationYear",
+            "sortByPredicate":"dblp:yearOfPublication",
+            "valueType": "string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 40
+        },
+        "publicationType":{
+            "containerClass": "six",
+            "facetType": "list",
+            "filterType": "uriFilter",
+            "predicate": "rdf:type",
+            "hideUnknownValue":true,
+            "facetValueFilter":"FILTER(?id != dblp:Publication)",
+            "facetLabelPredicate": "rdfs:label",
+            "facetLabelFilter":"FILTER(LANG(?prefLabel_) = 'en')",
+            "searchField": true,
+            "sortButton": true,
+            "sortBy": "instanceCount",
+            "sortByPredicate": "rdf:type/rdfs:label",
+            "sortDirection": "desc"
         }
     }
 }

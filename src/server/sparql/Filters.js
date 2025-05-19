@@ -104,37 +104,59 @@ const generateTextFilter = ({
   inverse
 }) => {
   const facetConfig = backendSearchConfig[facetClass].facets[facetID]
+  
   const queryTargetVariable = facetConfig.textQueryPredicate
     ? '?textQueryTarget'
     : `?${filterTarget}`
   const querySubject = facetConfig.textQueryGetLiteral
     ? `( ${queryTargetVariable} ?score ?literal )`
     : queryTargetVariable
+  
   let queryObject = ''
   let textQueryMaxInstances = ''
+  let filterStr = ''
+  let literalFilterStr = ''
+  let queryPredicate = ''
+  
   if (facetConfig.textQueryMaxInstances) {
     textQueryMaxInstances = facetConfig.textQueryMaxInstances
   }
-  if (has(facetConfig, 'textQueryProperty') && facetConfig.textQueryGetLiteral &&
-      has(facetConfig, 'textQueryHiglightingOptions')) {
-    queryObject = `( ${facetConfig.textQueryProperty} '${queryString}' ${textQueryMaxInstances} "${facetConfig.textQueryHiglightingOptions}" )`
+
+  // TODO: Should probably not use lucene as default, as most data sets will not have support for it.
+  if (!has(facetConfig, 'textQueryProvider') || facetConfig.textQueryProvider == "lucene") {
+    if (has(facetConfig, 'textQueryProperty') && facetConfig.textQueryGetLiteral &&
+        has(facetConfig, 'textQueryHiglightingOptions')) {
+      queryObject = `( ${facetConfig.textQueryProperty} '${queryString}' ${textQueryMaxInstances} "${facetConfig.textQueryHiglightingOptions}" )`
+    }
+    if (!has(facetConfig, 'textQueryProperty') && facetConfig.textQueryGetLiteral &&
+        has(facetConfig, 'textQueryHiglightingOptions')) {
+      queryObject = `( '${queryString}' ${textQueryMaxInstances} "${facetConfig.textQueryHiglightingOptions}" )`
+    }
+    if (has(facetConfig, 'textQueryProperty') && !facetConfig.textQueryGetLiteral &&
+        !has(facetConfig, 'textQueryHiglightingOptions')) {
+      queryObject = `( ${facetConfig.textQueryProperty} '${queryString}' ${textQueryMaxInstances})`
+    }
+    if (!has(facetConfig, 'textQueryProperty') && !facetConfig.textQueryGetLiteral &&
+        !has(facetConfig, 'textQueryHiglightingOptions')) {
+      queryObject = `'${queryString}' ${textQueryMaxInstances}`
+    }
+
+    queryPredicate = 'text:query'
+  } else if (["contains", "regex"].includes(facetConfig.textQueryProvider)) {
+    // For Contains and Regex, we support text search over multiple properties by using property paths w/ alternatives (|).
+    queryPredicate = facetConfig.textQueryProperty.trim().replace(/([\s\t])+/g, '|')
+    queryObject = "?textLiteral";
+
+    // Use LCASE to make the search using CONTAINS case insensitive.
+    literalFilterStr = facetConfig.textQueryProvider == "contains" ? `FILTER(CONTAINS(LCASE(${queryObject}), LCASE("${queryString}"))) .` 
+                                                     : `FILTER regex(${queryObject}, "${queryString}", "i") .`;
   }
-  if (!has(facetConfig, 'textQueryProperty') && facetConfig.textQueryGetLiteral &&
-       has(facetConfig, 'textQueryHiglightingOptions')) {
-    queryObject = `( '${queryString}' ${textQueryMaxInstances} "${facetConfig.textQueryHiglightingOptions}" )`
-  }
-  if (has(facetConfig, 'textQueryProperty') && !facetConfig.textQueryGetLiteral &&
-       !has(facetConfig, 'textQueryHiglightingOptions')) {
-    queryObject = `( ${facetConfig.textQueryProperty} '${queryString}' ${textQueryMaxInstances})`
-  }
-  if (!has(facetConfig, 'textQueryProperty') && !facetConfig.textQueryGetLiteral &&
-       !has(facetConfig, 'textQueryHiglightingOptions')) {
-    queryObject = `'${queryString}' ${textQueryMaxInstances}`
-  }
-  const filterStr = facetConfig.textQueryPredicate
-    ? `${queryTargetVariable} text:query ${queryObject} .
-    ?${filterTarget} ${facetConfig.textQueryPredicate} ${queryTargetVariable} .`
-    : `${querySubject} text:query ${queryObject} .`
+  
+  // TODO: Literal matching should be done in accordance to the user chosen locale language/perspective language (the chosen language for the appropriate field in the views)
+  filterStr = `${querySubject} ${queryPredicate} ${queryObject} .` + "\n"
+              + (facetConfig.textQueryPredicate ? `?${filterTarget} ${facetConfig.textQueryPredicate} ${queryTargetVariable} . \n` : '')
+              + literalFilterStr;
+
   if (inverse) {
     return `
       FILTER NOT EXISTS {
@@ -450,3 +472,7 @@ const generateConjuctionForUriFilter = ({
     return `?${filterTarget} ${predicateModified} ${valuesStr}`
   }
 }
+
+export const generateInstanceValuesConstraint = (filterTarget, uri) => {
+  return `VALUES ?${filterTarget} { <${uri}> }`;
+};

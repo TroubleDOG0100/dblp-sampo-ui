@@ -225,6 +225,168 @@ export const mapMultipleLineChart = ({ sparqlBindings, config }) => {
   return res
 }
 
+export const mapDynamicCategoryGroupedBarChart = ({sparqlBindings, config}) => {
+  let series = {};
+
+  // Convert xValue to appropriate type. If no explit converted is provided, then use converter based on binding datatype.
+  let categories = sparqlBindings.map((b) => config.xAxisConverter ? config.xAxisConverter(b.xValue) 
+                                             : getJSValueFromSparqlBinding({ binding: b.xValue })).filter((c, idx, cat) => idx == cat.indexOf(c));
+  
+  categories.sort((a, b) => a - b);
+
+  // Create the series structure
+  sparqlBindings.forEach(b => 
+  {
+    let dataPntGroup = has(b, 'group') ? b.group.value : null;
+    if (!series[b.category.value])
+    {
+      series[b.category.value] = dataPntGroup ? { [dataPntGroup] : [] } : [];
+    }
+    else if (dataPntGroup && !series[b.category.value][dataPntGroup])
+    {
+      series[b.category.value][dataPntGroup] = [];
+    }
+  });
+  
+  // Fill the data in series in the same order as categories and fill in any missing category (x-value) values for a series.
+  let i = 0;
+  while (i < categories.length){
+    let c = categories[i];
+
+    for (let seriesId in series)
+    {
+      let s = series[seriesId];
+      let groups = Array.isArray(s) ? null : s.keys();
+      let groupIt = 0;
+      let arrToFill = Array.isArray(s) ? s : s[groups[groupIt]];;
+      
+      while (arrToFill)
+      {
+        // Find bound y-value for given category and series and group.
+        let binding = sparqlBindings.find((b) => {
+          let xValue = config.xAxisConverter ? config.xAxisConverter(b.xValue) 
+                              : getJSValueFromSparqlBinding({ binding: b.xValue });
+
+          return xValue == c && b.category.value == seriesId && (groups == null || b.group.value == groups[groupIt]);
+        });
+        
+        arrToFill.push({x: c, y: binding ? parseFloat(binding.yValue.value) : null});
+        
+        groupIt++;
+        arrToFill = groups == null ? null : s[groups[groupIt]];
+      }
+    }
+
+    if (config && config.fillEmptyValues && i+1 != categories.length && categories[i + 1] - categories[i] > 1)
+      categories.push(categories[i] + 1);
+
+    i++;
+  }
+  
+  return {
+    categories,
+    series
+  };
+};
+
+const createNodeObject = (binding, edgePos) => {
+  return {
+    data: {
+      id: binding[edgePos]?.value,
+      prefLabel: binding[`${edgePos}Label`]?.value,
+      size: binding[`${edgePos}Size`]?.value
+    }
+  };
+};
+
+const createEdgeObject = (binding) => {
+  return {
+    data: {
+      weight: binding.weight.value,
+      prefLabel: binding.prefLabel.value,
+      source: binding.source.value,
+      target: binding.target.value
+    }
+  };
+}
+
+export const mapManualNetwork = (sparqlBindings) => {
+  let results = {edges:[], nodes:[]};
+  
+  sparqlBindings.forEach(b => {
+    // For new node (either as source/target) we add it to result set as a separate node.
+    if (!results.nodes.find((r) => r.data.id == b.source.value))
+      results.nodes.push(createNodeObject(b, 'source'));
+
+    if (!results.nodes.find((r) => r.data.id == b.target.value))
+      results.nodes.push(createNodeObject(b, 'target'));
+
+    // Push the edge into resultSet
+    results.edges.push(createEdgeObject(b));
+  });
+
+  return results;
+};
+
+export const copyToField = ({ data, config }) => {
+  return {[config.field]: data};
+}
+
+export const mapDynamicCategoryLineChart = ({ sparqlBindings, config }) => {
+  let res = {};
+
+  // Fill each category array with its graph data.
+  sparqlBindings.forEach(b => 
+  {
+    if (!res[b.category.value])
+      res[b.category.value] = [];
+    
+    // TODO: Add ability to add to each datapoint other related data.
+    // Convert xValue to appropriate type. If no explit converted is provided, then use converter based on bounded datatype.
+    res[b.category.value].push({x: config.xAxisConverter ? config.xAxisConverter(b.xValue) 
+                                                    : getJSValueFromSparqlBinding({ binding: b.xValue }), 
+                                y: parseFloat(b.yValue.value)});
+  });
+
+  // Fill any missing data points for an argument x in any category with zeroes, 
+  // if config has atribute set. 
+  if (sparqlBindings.length > 0 && config && config.fillEmptyValues) {
+    let argRange = sparqlBindings.map(b => parseInt(b.xValue.value));
+    let max = Math.max(...argRange), 
+        min = Math.min(...argRange);
+        
+    for (let i = min; i <= max; i++) {
+      for (let category in res) 
+      {
+        let series = res[category];
+        let dataPntAtX = series.find(p => p.x === i);
+
+        // Set for missing data point the y-value at 0.
+        if (!dataPntAtX) 
+          series.push({x: i, y: 0});
+      }
+    }
+  }
+
+  return res;
+}
+
+// Within each category series the cumulative sum is computed over the data points in-place.
+export const convertToCumulativeSumSeries = ({ data, config }) => {
+  for (let category in data) {
+    let series = data[category];
+    // We must order the series to be in ascending order by x value to ensure correct calculation.
+    series.sort((a, b) => a.x - b.x);
+
+    let sum = 0;
+    series.forEach(({_, y}, dataPntIdx) => {
+      sum += y;
+      series[dataPntIdx].y = sum;
+    });
+  }
+  return data;
+}
+
 export const mapPieChart = sparqlBindings => {
   const results = sparqlBindings.map(b => {
     return {
@@ -620,4 +782,26 @@ export const processTextIndexHighlighting = ({ data }) => {
     }
   })
   return data
+}
+
+export const getJSValueFromSparqlBinding = ({ binding }) => {
+  if (!binding)
+    return;
+
+  // TODO: Add for date time ability to convert date to appropriate date format (either as date object or string)
+  if (binding.type == 'literal') {
+    switch (binding.datatype) {
+      case 'http://www.w3.org/2001/XMLSchema#integer':
+      case 'http://www.w3.org/2001/XMLSchema#int':
+        return parseInt(binding.value);
+      case 'http://www.w3.org/2001/XMLSchema#decimal':
+      case 'http://www.w3.org/2001/XMLSchema#double':
+      case 'http://www.w3.org/2001/XMLSchema#float':
+        return parseFloat(binding.value);
+      case 'http://www.w3.org/2001/XMLSchema#boolean':
+        return binding.value === 'true';
+    }
+  }
+
+  return binding.value;
 }

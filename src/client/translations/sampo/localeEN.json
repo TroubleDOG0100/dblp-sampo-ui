@@ -321,6 +321,14 @@
         "prefLabel": {
           "label": "Title",
           "description": "The name or title of the Publication"
+        },
+        "publicationYear":{
+          "label":"Publication year",
+          "description": "The year of publication"
+        },
+        "publicationType":{
+          "label":"Publication type",
+          "description": "The type of publication"
         }
       }
     },

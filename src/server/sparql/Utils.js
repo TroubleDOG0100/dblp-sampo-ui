@@ -1,3 +1,4 @@
+import e from 'express'
 import { readFile } from 'fs/promises'
 import { has } from 'lodash'
 
@@ -10,6 +11,8 @@ export const createBackendSearchConfig = async () => {
   const portalConfigJSON = await readFile('src/configs/portalConfig.json')
   const portalConfig = JSON.parse(portalConfigJSON)
   const resultMappers = await import('./Mappers')
+  const templateFillers = await (import('./TemplateFiller'))
+
   const { portalID } = portalConfig
   const backendSearchConfig = {}
   for (const perspectiveID of portalConfig.perspectives.searchPerspectives) {
@@ -31,23 +34,25 @@ export const createBackendSearchConfig = async () => {
       const paginatedResultsPropertiesQueryBlockID = paginatedResultsConfig.propertiesQueryBlock
       const paginatedResultsPropertiesQueryBlock = sparqlQueries[paginatedResultsPropertiesQueryBlockID]
       paginatedResultsConfig.propertiesQueryBlock = paginatedResultsPropertiesQueryBlock
-      if (paginatedResultsConfig.postprocess) {
-        paginatedResultsConfig.postprocess.func = resultMappers[paginatedResultsConfig.postprocess.func]
-      }
+
+      // Process the paginatedResultsConfig resultClass
+      processResultClassConfig(paginatedResultsConfig, sparqlQueries, resultMappers, templateFillers, perspectiveConfig);
       if (instanceConfig) {
         const instancePagePropertiesQueryBlockID = instanceConfig.propertiesQueryBlock
         const instancePagePropertiesQueryBlock = sparqlQueries[instancePagePropertiesQueryBlockID]
         instanceConfig.propertiesQueryBlock = instancePagePropertiesQueryBlock
-        if (instanceConfig.postprocess) {
-          instanceConfig.postprocess.func = resultMappers[instanceConfig.postprocess.func]
-        }
+        
+        // Process the instanceConfig resultClass
+        processResultClassConfig(instanceConfig, sparqlQueries, resultMappers, templateFillers, perspectiveConfig);
+
         if (has(instanceConfig, 'instancePageResultClasses')) {
           for (const instancePageResultClass in instanceConfig.instancePageResultClasses) {
             const instancePageResultClassConfig = instanceConfig.instancePageResultClasses[instancePageResultClass]
-            processResultClassConfig(instancePageResultClassConfig, sparqlQueries, resultMappers)
+            
+            processResultClassConfig(instancePageResultClassConfig, sparqlQueries, resultMappers, templateFillers, perspectiveConfig)
             if (instancePageResultClassConfig.resultClasses) {
               for (const extraResultClass in instancePageResultClassConfig.resultClasses) {
-                processResultClassConfig(instancePageResultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers)
+                processResultClassConfig(instancePageResultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers, templateFillers, perspectiveConfig)
               }
               extraResultClasses = {
                 ...extraResultClasses,
@@ -62,10 +67,10 @@ export const createBackendSearchConfig = async () => {
       for (const resultClass in perspectiveConfig.resultClasses) {
         if (resultClass === perspectiveID) { continue }
         const resultClassConfig = perspectiveConfig.resultClasses[resultClass]
-        processResultClassConfig(resultClassConfig, sparqlQueries, resultMappers)
+        processResultClassConfig(resultClassConfig, sparqlQueries, resultMappers, templateFillers, perspectiveConfig)
         if (resultClassConfig.resultClasses) {
           for (const extraResultClass in resultClassConfig.resultClasses) {
-            processResultClassConfig(resultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers)
+            processResultClassConfig(resultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers, templateFillers, perspectiveConfig)
           }
           extraResultClasses = {
             ...extraResultClasses,
@@ -114,10 +119,10 @@ export const createBackendSearchConfig = async () => {
     if (has(instanceConfig, 'instancePageResultClasses')) {
       for (const instancePageResultClass in instanceConfig.instancePageResultClasses) {
         const instancePageResultClassConfig = instanceConfig.instancePageResultClasses[instancePageResultClass]
-        processResultClassConfig(instancePageResultClassConfig, sparqlQueries, resultMappers)
+        processResultClassConfig(instancePageResultClassConfig, sparqlQueries, resultMappers, templateFillers, perspectiveConfig)
         if (instancePageResultClassConfig.resultClasses) {
           for (const extraResultClass in instancePageResultClassConfig.resultClasses) {
-            processResultClassConfig(instancePageResultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers)
+            processResultClassConfig(instancePageResultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers, templateFillers, perspectiveConfig)
           }
           extraResultClasses = {
             ...extraResultClasses,
@@ -146,13 +151,40 @@ export const createBackendSearchConfig = async () => {
   return backendSearchConfig
 }
 
-const processResultClassConfig = (resultClassConfig, sparqlQueries, resultMappers) => {
+const processResultClassConfig = (resultClassConfig, sparqlQueries, resultMappers, templateFillers, perspectiveConfig) => {
+  let sparqlQueryArr = []; 
+
   if (resultClassConfig.sparqlQuery) {
-    resultClassConfig.sparqlQuery = sparqlQueries[resultClassConfig.sparqlQuery]
+    let resultClassQuery = sparqlQueries[resultClassConfig.sparqlQuery];
+    
+    sparqlQueryArr = (Array.isArray(resultClassQuery) ? resultClassQuery : 
+      [{
+        sparqlQuery: resultClassQuery,
+        dataSet: undefined, 
+        useNetworkAPI: resultClassConfig.useNetworkAPI,
+        sparqlQueryNodes: sparqlQueries[resultClassConfig.sparqlQueryNodes]
+      }]
+    ).map((q) => {
+      return {
+        ...q,
+        sparqlQuery: q.sparqlQuery,
+        sparqlQueryNodes: q.sparqlQueryNodes,
+        endpoint: q.dataSet ? perspectiveConfig.datasets[q.dataSet].endpoint : perspectiveConfig.endpoint,
+        resultMapper: q.resultMappers ? resultMappers[q.resultMappers] : undefined,
+        postprocess: q.postprocess ? resultMappers[q.postprocess.func] : undefined,
+        templateFiller: q.templateFiller ? templateFillers[q.templateFiller] : undefined
+      }
+    });
+
+    //console.log(sparqlQueryArr)
+    resultClassConfig.sparqlQuery = sparqlQueryArr;
   }
+
+  // TODO: Should remove?
   if (resultClassConfig.sparqlQueryNodes) {
     resultClassConfig.sparqlQueryNodes = sparqlQueries[resultClassConfig.sparqlQueryNodes]
   }
+
   if (resultClassConfig.instanceConfig) {
     const { instanceConfig } = resultClassConfig
     if (instanceConfig.propertiesQueryBlock) {
@@ -162,6 +194,7 @@ const processResultClassConfig = (resultClassConfig, sparqlQueries, resultMapper
       instanceConfig.relatedInstances = sparqlQueries[instanceConfig.relatedInstances]
     }
   }
+  
   if (resultClassConfig.resultMapper) {
     resultClassConfig.resultMapper = resultMappers[resultClassConfig.resultMapper]
   }
@@ -361,6 +394,22 @@ export const createExtraResultClassesForJSONConfig = async oldBackendSearchConfi
     }
   }
   console.log(JSON.stringify(resultClasses))
+}
+
+export const applyPostProcessing = ({data, resultMapper, resultMapperConfig, postprocess}) => {
+  let mappedResults = data;
+
+  if (resultMapper){
+    mappedResults = resultMapperConfig
+      ? resultMapper({ sparqlBindings: data, config: resultMapperConfig })
+      : resultMapper(data)
+  }
+  
+  if (postprocess) {
+    mappedResults = postprocess.func({ data: mappedResults, config: postprocess.config })
+  }
+
+  return mappedResults;
 }
 
 // createExtraResultClassesForJSONConfig(oldBackendSearchConfig)
