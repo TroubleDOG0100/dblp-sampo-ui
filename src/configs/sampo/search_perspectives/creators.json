@@ -1,14 +1,14 @@
 {
-    "id": "publications",
+    "id": "creators",
     "endpoint": {
         "url": "https://sparql.dblp.org/sparql",
         "useAuth": false,
         "prefixesFile": "SparqlQueriesPrefixes.js"
     },
-    "sparqlQueriesFile": "SparqlQueriesPerspective1.js",
-    "baseURI": "https://dblp.org/rec/books/acm/",
+    "sparqlQueriesFile": "SparqlQueriesPerspective2.js",
+    "baseURI": "https://dblp.org/pid/",
     "URITemplate": "<BASE_URI><LOCAL_ID>",
-    "facetClass": "dblp:Publication",
+    "facetClass": "dblp:Creator",
     "frontPageImage": "main_page/works-452x262.jpg",
     "searchMode": "faceted-search",
     "enableDynamicLanguageChange": false,
@@ -18,7 +18,7 @@
     "defaultTab": "table",
     "defaultInstancePageTab": "table",
     "resultClasses": {
-        "publications": {
+        "creators": {
             "paginatedResultsConfig": {
                 "tabID": 0,
                 "component": "ResultTable",
@@ -80,87 +80,16 @@
             "sortValues": true,
             "numberedList": false,
             "minWidth": 200
-        },
-        {
-            "id": "publicationYear",
-            "valueType": "string",
-            "makeLink": false,
-            "externalLink": false,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 30
-        },
-        {
-            "id": "doi",
-            "valueType": "object",
-            "makeLink": true,
-            "externalLink": true,
-            "sortValues": false,
-            "disableSort": true,
-            "numberedList": false,
-            "minWidth": 75
-        },
-        {
-            "id": "publicationVenue",
-            "valueType": "object",
-            "makeLink": true,
-            "externalLink": true,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 50
-        },
-        {
-            "id":"creators",
-            "valueType":"object",
-            "makeLink": true,
-            "externalLink": false,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 100
-        },
-        {
-            "id": "publicationType",
-            "valueType": "object",
-            "makeLink": false,
-            "externalLink": false,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 100
         }
     ],
     "facets": {
         "prefLabel": {
-            "sortByPredicate": "dblp:title",
+            "sortByPredicate": "dblp:creatorName",
             "containerClass": "one",
             "facetType": "text",
             "filterType": "textFilter",
             "textQueryProvider": "regex",
-            "textQueryProperty": "dblp:title"
-        },
-        "publicationYear": {
-            "id": "publicationYear",
-            "sortByPredicate":"dblp:yearOfPublication",
-            "valueType": "string",
-            "makeLink": false,
-            "externalLink": false,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 40
-        },
-        "publicationType":{
-            "containerClass": "six",
-            "facetType": "list",
-            "filterType": "uriFilter",
-            "predicate": "rdf:type",
-            "hideUnknownValue":true,
-            "facetValueFilter":"FILTER(?id != dblp:Publication)",
-            "facetLabelPredicate": "rdfs:label",
-            "facetLabelFilter":"FILTER(LANG(?prefLabel_) = 'en')",
-            "searchField": true,
-            "sortButton": true,
-            "sortBy": "instanceCount",
-            "sortByPredicate": "rdf:type/rdfs:label",
-            "sortDirection": "desc"
+            "textQueryProperty": "dblp:creatorName"
         }
     }
 }

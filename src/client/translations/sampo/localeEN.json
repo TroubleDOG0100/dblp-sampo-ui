@@ -191,13 +191,13 @@
         }
       }
     },
-    "perspective2": {
-      "label": "Perspective 2",
-      "facetResultsType": "manuscripts",
+    "creators": {
+      "label": "Creators",
+      "facetResultsType": "Publication creators",
       "shortDescription": "Perspective 2 description",
       "longDescription": "<p class=\"MuiTypography-root MuiTypography-body1 MuiTypography-paragraph\"> Use this perspective to access data related to physical manuscript objects. If two or more source datasets include the same manuscript and this has been verified, the information from the source datasets has been merged into one manuscript. See <a href=\"/instructions\">instructions</a> for using the filters. The result view can be selected using the tabs: </p> <ul class=\"MuiTypography-root MuiTypography-body1\"> <li> <strong>TABLE</STRONG> view includes all manuscripts in the MMM data. One table row is equivalent to one manuscript. </li> <li> <strong>PRODUCTION PLACES</STRONG> view visualizes the connection between manuscripts and the places where they were produced. </li> <li> <strong>MIGRATIONS</strong> view visualizes the migration of a manuscript from place of production to its most recently observed location. </li> <li> <strong>EXPORT</strong> the SPARQL query used to generate the result table view into YASGUI query editor. </li> </ul>",
       "instancePage": {
-        "label": "Manuscript",
+        "label": "Creator",
         "description": "<p class=\"MuiTypography-root MuiTypography-body1 MuiTypography-paragraph\"> MMM’s Manuscript entity corresponds to <a href='https://www.ifla.org/publications/node/11240' target='_blank' rel='noopener noreferrer'>FRBRoo’s</a> Manifestation Singleton, defined as \"physical objects that each carry an instance of [an Expression], and that were produced as unique objects...\" The various types of records that describe manuscripts in each of the three contributing MMM datasets have been mapped to this entity. </p> <h6 class=\"MuiTypography-root MuiTypography-h6\"> Manuscript labels </h6> <p class=\"MuiTypography-root MuiTypography-body1 MuiTypography-paragraph\"> If the Bibale or Oxford databases reference a shelf mark for the manuscript, that information will appear as its label. Otherwise, an SDBM ID number will serve as its label. SDBM ID numbers contain prefixes that indicate different things about the type of record they contain: </p> <ul class=\"MuiTypography-root MuiTypography-body1\"> <li> SDBM_MS: SDBM Manuscript Record, which aggregates the data of two or more SDBM Entries. Each Entry represents a different observation of a manuscript at a different point in time, derived from various sources. </li> <li> SDBM_MS_orphan: a single Entry in the SDBM, meaning it has not been linked to any other Entries and therefore has no SDBM Manuscript Record. </li> <li> SDBM_MS_part: a record identified as a fragment of a larger manuscript. </li> </ul> <p class=\"MuiTypography-root MuiTypography-body1 MuiTypography-paragraph\"></p>"
       },
       "properties": {
@@ -206,101 +206,9 @@
           "description": "Uniform Resource Identifier"
         },
         "prefLabel": {
-          "label": "Label",
-          "description": "A short label describing the manuscript.",
+          "label": "Name",
+          "description": "The full name of the creator",
           "textFacetInputPlaceholder": "Search..."
-        },
-        "author": {
-          "label": "Author",
-          "description": "The author(s) who have contributed to the intellectual content (works) contained in the manuscript."
-        },
-        "work": {
-          "label": "Work",
-          "description": "The intellectual content (works) contained in the manuscript."
-        },
-        "expression": {
-          "label": "Expression",
-          "description": "The linguistic versions of the works contained in the manuscript."
-        },
-        "productionPlace": {
-          "label": "Production place",
-          "description": "The location where the manuscript was written. Multiple production places may appear for a single manuscript due to the following reasons: 1) there are discrepancies in the contributing data source, 2) there are discrepancies between several contributing data sources, 3) the precise date is uncertain, 4) the production indeed took place on several occasions (e.g. for composite manuscripts)."
-        },
-        "productionTimespan": {
-          "label": "Production date",
-          "description": "The date when the manuscript was written. Multiple production dates may appear for a single manuscript due to the following reasons: 1) there are discrepancies in the contributing data source, 2) there are discrepancies between several contributing data sources, 3) the precise date is uncertain, 4) the production indeed took place on several occasions (e.g. for composite manuscripts)."
-        },
-        "note": {
-          "label": "Note",
-          "description": "Other info such as distinguishing characteristics, notes on the physical structure of the manuscript, script types, note glosses, physical relationships among various texts and/or parts of a miscellany, such as multiple types of page layout."
-        },
-        "language": {
-          "label": "Language",
-          "description": "The language(s) in which the manuscript was written."
-        },
-        "event": {
-          "label": "Event",
-          "description": "Events related to the manuscript."
-        },
-        "owner": {
-          "label": "Owner",
-          "description": "Former or current owners (individual or institutional)."
-        },
-        "collection": {
-          "label": "Collection",
-          "description": "The collection(s) that the manuscript has been part of at some point in time."
-        },
-        "transferOfCustodyPlace": {
-          "label": "Transfer of Custody Place",
-          "description": "The locations of “Transfer of Custody” events related to the manuscript."
-        },
-        "transferOfCustodyTimespan": {
-          "label": "Transfer of Custody Date",
-          "description": "The dates of “Transfer of Custody” events related to the manuscript."
-        },
-        "lastKnownLocation": {
-          "label": "Last known location",
-          "description": "Last known location"
-        },
-        "material": {
-          "label": "Material",
-          "description": "The physical material on which the text is written."
-        },
-        "height": {
-          "label": "Height",
-          "description": "The height of the manuscript in millimeters."
-        },
-        "width": {
-          "label": "Width",
-          "description": "The width of the manuscript in millimeters."
-        },
-        "folios": {
-          "label": "Folios",
-          "description": "The number of folios (leaves)."
-        },
-        "lines": {
-          "label": "Lines",
-          "description": "The number of lines in a text block. Left blank if the number of lines occurring throughout the manuscript is too irregular to be a useful descriptor for searching."
-        },
-        "columns": {
-          "label": "Columns",
-          "description": "The number of columns. Left blank if the number of columns occurring throughout the manuscript is too irregular to be a useful descriptor for searching."
-        },
-        "miniatures": {
-          "label": "Miniatures",
-          "description": "The number of miniatures."
-        },
-        "decoratedInitials": {
-          "label": "Decorated initials",
-          "description": "The number of decorated initials."
-        },
-        "historiatedInitials": {
-          "label": "Historiated initials",
-          "description": "The number of historiated initials."
-        },
-        "source": {
-          "label": "Source",
-          "description": "The source dataset(s) (Bibale, Bodleian, or SDBM) contributing the information on the manuscript. If two or more source datasets include the same manuscript and this has been manually verified, the information from the source datasets have been merged into one manuscript (table row). Click on the links to view the original record on the source’s website."
         }
       }
     },
@@ -321,6 +229,14 @@
         "prefLabel": {
           "label": "Title",
           "description": "The name or title of the Publication"
+        },
+        "doi":{
+          "label": "DOI",
+          "description": "The DOI of the publication"
+        },
+        "publicationVenue":{
+          "label": "Published in",
+          "description": "The conference series, the journal, or the repository in which the publication has been published"
         },
         "publicationYear":{
           "label":"Publication year",
