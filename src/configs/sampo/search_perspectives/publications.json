@@ -77,6 +77,7 @@
             "resultMapperConfig":{"fillEmptyValues":false},
             "createChartData": "createSingleLineChartData",
             "title": "Publications timeline",
+            "seriesTitle":"New publications",
             "xaxisType":"numerical",
             "xaxisTitle": "Year",
             "yaxisTitle":"New publication count"
@@ -92,6 +93,11 @@
         "knowledgeGraphMetadata": {
             "sparqlQuery": "knowledgeGraphMetadataQuery",
             "resultMapper": "makeObjectList"
+        }
+    },
+    "datasets":{
+        "wikidata":{
+            "endpoint":{"url": "https://query.wikidata.org/sparql"}
         }
     },
     "properties": [
@@ -120,7 +126,7 @@
             "externalLink": false,
             "sortValues": false,
             "numberedList": false,
-            "minWidth": 30
+            "minWidth": 20
         },
         {
             "id": "doi",
@@ -129,15 +135,6 @@
             "externalLink": true,
             "sortValues": false,
             "disableSort": true,
-            "numberedList": false,
-            "minWidth": 75
-        },
-        {
-            "id": "publicationVenue",
-            "valueType": "object",
-            "makeLink": true,
-            "externalLink": true,
-            "sortValues": false,
             "numberedList": false,
             "minWidth": 50
         },
@@ -151,6 +148,24 @@
             "minWidth": 100
         },
         {
+            "id":"citationCount",
+            "valueType":"string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 20
+        },
+        {
+            "id": "publicationVenue",
+            "valueType": "object",
+            "makeLink": true,
+            "externalLink": true,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 50
+        },
+        {
             "id":"pagination",
             "valueType": "string",
             "makeLink": false,
@@ -161,6 +176,25 @@
             "onlyOnInstancePage":true
         },
         {
+            "id": "publicationType",
+            "valueType": "object",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 80
+        },
+        {
+            "id": "publicationSubject",
+            "valueType": "object",
+            "disableSort":true,
+            "makeLink": true,
+            "externalLink": true,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 80
+        },
+        {
             "id":"otherIds",
             "valueType": "object",
             "makeLink": true,
@@ -169,15 +203,6 @@
             "numberedList": false,
             "minWidth": 200,
             "onlyOnInstancePage":true
-        },
-        {
-            "id": "publicationType",
-            "valueType": "object",
-            "makeLink": false,
-            "externalLink": false,
-            "sortValues": false,
-            "numberedList": false,
-            "minWidth": 100
         }
     ],
     "facets": {

@@ -243,9 +243,17 @@
           "label":"Publication year",
           "description": "The year of publication"
         },
+        "publicationSubject":{
+          "label":"Main subject",
+          "description": "The main subject of publication"
+        },
         "creators":{
           "label":"Author/Editor",
           "description": "The publication authors and editors"
+        },
+        "citationCount":{
+          "label":"Citation count",
+          "description":"Total number publications that have cited this publication."
         },
         "pagination":{
           "label":"Pagination",
