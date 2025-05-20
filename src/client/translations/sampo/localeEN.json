@@ -79,6 +79,7 @@
     "table": "table",
     "map": "map",
     "publication_types_timeline": "Publication type timeline",
+    "publication_count_timeline": "Publication count timeline",
     "production_places_heatmap": "production heatmap",
     "last_known_locations": "last known locations",
     "migrations": "migrations",

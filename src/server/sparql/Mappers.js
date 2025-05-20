@@ -333,42 +333,8 @@ export const copyToField = ({ data, config }) => {
 }
 
 export const mapDynamicCategoryLineChart = ({ sparqlBindings, config }) => {
-  let res = {};
-
-  // Fill each category array with its graph data.
-  sparqlBindings.forEach(b => 
-  {
-    if (!res[b.category.value])
-      res[b.category.value] = [];
-    
-    // TODO: Add ability to add to each datapoint other related data.
-    // Convert xValue to appropriate type. If no explit converted is provided, then use converter based on bounded datatype.
-    res[b.category.value].push({x: config.xAxisConverter ? config.xAxisConverter(b.xValue) 
-                                                    : getJSValueFromSparqlBinding({ binding: b.xValue }), 
-                                y: parseFloat(b.yValue.value)});
-  });
-
-  // Fill any missing data points for an argument x in any category with zeroes, 
-  // if config has atribute set. 
-  if (sparqlBindings.length > 0 && config && config.fillEmptyValues) {
-    let argRange = sparqlBindings.map(b => parseInt(b.xValue.value));
-    let max = Math.max(...argRange), 
-        min = Math.min(...argRange);
-        
-    for (let i = min; i <= max; i++) {
-      for (let category in res) 
-      {
-        let series = res[category];
-        let dataPntAtX = series.find(p => p.x === i);
-
-        // Set for missing data point the y-value at 0.
-        if (!dataPntAtX) 
-          series.push({x: i, y: 0});
-      }
-    }
-  }
-
-  return res;
+  // For multipleLine chart we only need series data since categories (xValues) will get automatically extracted from series data.
+  return mapDynamicCategoryGroupedBarChart({sparqlBindings, config}).series;
 }
 
 // Within each category series the cumulative sum is computed over the data points in-place.
@@ -384,6 +350,7 @@ export const convertToCumulativeSumSeries = ({ data, config }) => {
       series[dataPntIdx].y = sum;
     });
   }
+  
   return data;
 }
 

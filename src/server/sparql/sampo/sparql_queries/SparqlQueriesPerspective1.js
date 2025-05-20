@@ -67,3 +67,18 @@ select ?category
   FILTER(LANG(?category) = "en")
 }
 `
+
+export const publicationCountPerYear = `
+select (?yearOfPublication as ?category) 
+       (?publicationCount as ?count)
+{
+  select ?yearOfPublication (count(?id) as ?publicationCount) 
+  {
+    <FILTER>
+    VALUES ?facetClass { <FACET_CLASS> }
+    ?id a ?facetClass ;
+        dblp:yearOfPublication ?yearOfPublication .
+  }
+  GROUP BY ?yearOfPublication
+}
+`

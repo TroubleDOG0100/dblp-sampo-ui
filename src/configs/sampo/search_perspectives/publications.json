@@ -64,10 +64,25 @@
             "xaxisTickAmount": 50,
             "xaxisType":"numerical",
             "xaxisTitle": "Year",
-            "yaxisTitle":"Publication count"
+            "yaxisTitle":"New publication count"
+        },
+        "publicationCountTimeline":{
+            "tabID": 2,
+            "component": "ApexCharts",
+            "tabPath": "publication_count_timeline",
+            "tabIcon": "ShowChart",
+            "facetClass": "publications",
+            "sparqlQuery": "publicationCountPerYear",
+            "resultMapper": "mapLineChart",
+            "resultMapperConfig":{"fillEmptyValues":false},
+            "createChartData": "createSingleLineChartData",
+            "title": "Publications timeline",
+            "xaxisType":"numerical",
+            "xaxisTitle": "Year",
+            "yaxisTitle":"New publication count"
         },
         "export": {
-            "tabID": 2,
+            "tabID": 3,
             "component": "Export",
             "tabPath": "export",
             "tabIcon": "CloudDownload",
