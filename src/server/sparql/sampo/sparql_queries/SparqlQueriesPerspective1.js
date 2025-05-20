@@ -43,3 +43,27 @@ export const workProperties = `
       BIND(?otherIds__id as ?otherIds__dataProviderUrl)
     }
     `;
+
+export const publicationTypePerYear = 
+`
+select ?category 
+       (?yearOfPublication as ?xValue) 
+       (?publicationCount as ?yValue)
+{
+  {
+    select ?yearOfPublication ?publicationType (count(?id) as ?publicationCount) 
+    {
+      <FILTER>
+      VALUES ?facetClass { <FACET_CLASS> }
+      ?id a ?facetClass ;
+          dblp:yearOfPublication ?yearOfPublication ;
+          a ?publicationType .
+      FILTER(?publicationType != ?facetClass)
+  	}
+  	GROUP BY ?yearOfPublication ?publicationType
+  }
+  
+  ?publicationType rdfs:label ?category .
+  FILTER(LANG(?category) = "en")
+}
+`

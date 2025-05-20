@@ -78,7 +78,7 @@
   "tabs": {
     "table": "table",
     "map": "map",
-    "production_places": "production places",
+    "publication_types_timeline": "Publication type timeline",
     "production_places_heatmap": "production heatmap",
     "last_known_locations": "last known locations",
     "migrations": "migrations",

@@ -49,8 +49,25 @@
                 }
             }
         },
-        "export": {
+        "publicationTypesTimeline":{
             "tabID": 1,
+            "component": "ApexCharts",
+            "tabPath": "publication_types_timeline",
+            "tabIcon": "ShowChart",
+            "facetClass": "publications",
+            "sparqlQuery": "publicationTypePerYear",
+            "resultMapper":"mapDynamicCategoryGroupedBarChart",
+            "resultMapperConfig":{"fillEmptyValues":true},
+            "createChartData": "createGroupedBarChartData",
+            "apexChartType":"bar",
+            "title": "Publications per type timeline",
+            "xaxisTickAmount": 50,
+            "xaxisType":"numerical",
+            "xaxisTitle": "Year",
+            "yaxisTitle":"Publication count"
+        },
+        "export": {
+            "tabID": 2,
             "component": "Export",
             "tabPath": "export",
             "tabIcon": "CloudDownload",
@@ -157,6 +174,9 @@
             "textQueryProvider": "regex",
             "textQueryProperty": "dblp:title"
         },
+        "publicationVenue": {
+            "sortByPredicate":"(dblp:publishedInStream/dblp:streamTitle | dblp:publishedIn)"
+        },
         "publicationYear": {
             "sortByPredicate":"dblp:yearOfPublication",
             "containerClass": "six",
@@ -178,6 +198,7 @@
             "sortButton": true,
             "sortBy": "instanceCount",
             "sortByPredicate": "rdf:type/rdfs:label",
+            "pieChartButton":true,
             "sortDirection": "desc"
         }
     }

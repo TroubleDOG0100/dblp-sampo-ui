@@ -1,4 +1,3 @@
-
 import intl from 'react-intl-universal'
 import { generateLabelForMissingValue } from '../../helpers/helpers'
 
@@ -70,6 +69,83 @@ export const createSingleLineChartData = ({
   return apexChartOptionsWithData
 }
 
+export const createGroupedBarChartData = ({
+  resultClass,
+  facetClass,
+  perspectiveState,
+  results,
+  resultClassConfig,
+  screenSize}) => {
+  const {
+    xaxisType,
+    xaxisTickAmount,
+    xaxisLabels,
+    title,
+    xaxisTitle,
+    yaxisTitle,
+    stroke,
+    fill,
+    apexChartType,
+    tooltip
+  } = resultClassConfig
+  let series = []
+
+  for (const seriesId in results.series) {
+    let seriesData = results.series[seriesId];
+    if (Array.isArray(seriesData)){
+      series.push({
+        name: intl.get(`lineChart.${seriesId}`) || seriesId,
+        data: seriesData
+      })
+    }else{
+      for (const groupId in seriesData)
+      {
+        series.push({
+          name: intl.get(`lineChart.${seriesId}`) || seriesId || intl.get(`lineChart.${groupId}`) || groupId,
+          group: intl.get(`lineChart.${groupId}`) || groupId,
+          data: seriesData[groupId]
+        })
+      }
+    }
+  }
+  
+
+  const apexChartOptionsWithData = {
+    chart: {
+      type: ( apexChartType ) || 'area',
+      stacked:true,
+      width: '100%',
+      height: '100%',
+      fontFamily: 'Roboto'
+    },
+    series: series,
+    title: {
+      text: title
+    },
+    dataLabels: {
+      enabled: false
+    },
+    xaxis: {
+      ...(xaxisType) && { type: xaxisType }, // default is 'category'
+      ...(xaxisTickAmount) && { tickAmount: xaxisTickAmount },
+      ...(xaxisLabels) && { labels: xaxisLabels },
+      categories: results.categories,
+      title: {
+        text: xaxisTitle
+      }
+    },
+    yaxis: {
+      title: {
+        text: yaxisTitle
+      }
+    },
+    ...(stroke) && { stroke },
+    ...(fill) && { fill },
+    ...(tooltip) && { tooltip }
+  }
+  return apexChartOptionsWithData
+};
+
 export const createMultipleLineChartData = ({
   resultClass,
   facetClass,
@@ -87,6 +163,7 @@ export const createMultipleLineChartData = ({
     yaxisTitle,
     stroke,
     fill,
+    apexChartType,
     tooltip
   } = resultClassConfig
   const series = []
@@ -98,7 +175,7 @@ export const createMultipleLineChartData = ({
   }
   const apexChartOptionsWithData = {
     chart: {
-      type: 'area',
+      type: ( apexChartType ) || 'area',
       width: '100%',
       height: '100%',
       fontFamily: 'Roboto'
@@ -254,6 +331,7 @@ export const createApexPieChartData = ({
   let otherCount = 0
   const arraySum = results.reduce((sum, current) => sum + current.instanceCount, 0)
   const { sliceVisibilityThreshold = defaultSliceVisibilityThreshold, propertyID, title = null } = resultClassConfig
+  
   results.forEach(item => {
     const sliceFraction = item.instanceCount / arraySum
     if (sliceFraction <= sliceVisibilityThreshold) {
@@ -295,7 +373,8 @@ export const createApexPieChartData = ({
     colors: chartColors,
     series,
     labels,
-    ...(title) && { title }
+    // Seems that ApexCharts requires title to be an object /w defined style.
+    ...(title) && {title:{...apexPieChartOptions.title, text: title}}
   }
   return apexChartOptionsWithData
 }
@@ -308,6 +387,12 @@ const apexPieChartOptions = {
     height: '100%',
     parentHeightOffset: 10,
     fontFamily: 'Roboto'
+  },
+  title:{
+    style: {
+      fontSize: '14px',
+      fontFamily: 'Roboto, Arial, sans-serif'
+    }
   },
   legend: {
     position: 'right',
