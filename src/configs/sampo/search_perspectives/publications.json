@@ -238,6 +238,7 @@
             "sortButton": true,
             "sortBy": "instanceCount",
             "sortByPredicate": "rdf:type/rdfs:label",
+            "sortByValueFilter": "FILTER(?sortBy != 'Creator')",
             "pieChartButton":true,
             "sortDirection": "desc"
         }

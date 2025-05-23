@@ -210,6 +210,26 @@
           "label": "Name",
           "description": "The full name of the creator",
           "textFacetInputPlaceholder": "Search..."
+        },
+        "orcid":{
+          "label": "ORCID",
+          "description": "Open Researcher and Contributor ID"
+        },
+        "creatorType":{
+          "label":"Type",
+          "description": "Type of creator"
+        },
+        "creatorNote":{
+          "label": "Note",
+          "description": "An additional note about the creator"
+        },
+        "affiliation":{
+          "label":"Affiliation",
+          "description":"A (past or present) affiliation of the creator"
+        },
+        "otherIds":{
+          "label":"Related links",
+          "description": "Related links to this entity"
         }
       }
     },

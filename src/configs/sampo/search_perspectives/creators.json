@@ -79,7 +79,63 @@
             "externalLink": false,
             "sortValues": true,
             "numberedList": false,
-            "minWidth": 200
+            "minWidth": 100
+        },
+        {
+            "id":"orcid",
+            "valueType":"object",
+            "makeLink": true,
+            "externalLink": true,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 50
+        },
+        {
+            "id":"publication",
+            "valueType":"string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 100
+        },
+        {
+            "id":"affiliation",
+            "valueType":"string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 110
+        },
+        {
+            "id":"creatorType",
+            "valueType":"string",
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 30 
+        },
+        {
+            "id":"creatorNote",
+            "valueType":"string",
+            "collapsedMaxWords":10,
+            "makeLink": false,
+            "externalLink": false,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 50
+        },
+        {
+            "id":"otherIds",
+            "valueType": "object",
+            "makeLink": true,
+            "externalLink": true,
+            "sortValues": false,
+            "numberedList": false,
+            "minWidth": 200,
+            "onlyOnInstancePage":true
         }
     ],
     "facets": {
@@ -90,6 +146,23 @@
             "filterType": "textFilter",
             "textQueryProvider": "regex",
             "textQueryProperty": "dblp:creatorName"
+        },
+        "creatorType":{
+            "containerClass": "four",
+            "facetType": "list",
+            "filterType": "uriFilter",
+            "predicate": "rdf:type",
+            "hideUnknownValue":true,
+            "facetValueFilter":"FILTER(?id != dblp:Creator)",
+            "facetLabelPredicate": "rdfs:label",
+            "facetLabelFilter":"FILTER(LANG(?prefLabel_) = 'en')",
+            "searchField": true,
+            "sortButton": true,
+            "sortBy": "instanceCount",
+            "pieChartButton":true,
+            "sortDirection": "desc",
+            "sortByPredicate":"rdf:type/rdfs:label",
+            "sortByValueFilter": "FILTER(?sortBy != 'Creator')"
         }
     }
 }
