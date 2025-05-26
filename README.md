@@ -1,4 +1,14 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+# DBLP SAMPO portal
+
+A semantic portal for Computer Science publication bibliography (https://dblp.org/) linked data official linked data SPARQL endpoint https://sparql.dblp.org/sparql browsing and analysis
+
+## Portal setup locally
+
+* Need to install packages with `npm install` (If running Node.js version other than 16., then must run `npm install --legacy-peer-deps`)
+* Run command `npm run dev` for setting up portal at `https:localhost:8080`.
+
 # Sampo-UI
 
 A framework for building user interfaces for semantic portals. 

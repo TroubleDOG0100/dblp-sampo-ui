@@ -149,6 +149,7 @@
             "externalLink": false,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 50
         },
         {
@@ -158,6 +159,7 @@
             "externalLink": true,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 200,
             "onlyOnInstancePage":true
         }

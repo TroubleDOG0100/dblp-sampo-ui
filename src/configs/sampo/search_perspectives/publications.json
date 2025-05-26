@@ -145,6 +145,7 @@
             "externalLink": false,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 100
         },
         {
@@ -154,6 +155,7 @@
             "externalLink": false,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 20
         },
         {
@@ -163,6 +165,7 @@
             "externalLink": true,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 50
         },
         {
@@ -172,6 +175,7 @@
             "externalLink": false,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 50,
             "onlyOnInstancePage":true
         },
@@ -182,6 +186,7 @@
             "externalLink": false,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 80
         },
         {
@@ -201,6 +206,7 @@
             "externalLink": true,
             "sortValues": false,
             "numberedList": false,
+            "disableSort": true,
             "minWidth": 200,
             "onlyOnInstancePage":true
         }
