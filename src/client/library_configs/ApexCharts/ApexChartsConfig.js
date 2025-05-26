@@ -134,6 +134,7 @@ export const createGroupedBarChartData = ({
         text: xaxisTitle
       }
     },
+    colors: ['#001c3d', '#ccffa6', '#a18068', '#ba79b6', '#004e75', '#547500', '#c2774c', '#f321fa', '#1793b3'],
     yaxis: {
       title: {
         text: yaxisTitle

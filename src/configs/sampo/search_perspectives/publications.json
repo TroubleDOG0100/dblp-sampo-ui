@@ -57,7 +57,7 @@
             "facetClass": "publications",
             "sparqlQuery": "publicationTypePerYear",
             "resultMapper":"mapDynamicCategoryGroupedBarChart",
-            "resultMapperConfig":{"fillEmptyValues":true},
+            "resultMapperConfig":{"fillEmptyValues":false},
             "createChartData": "createGroupedBarChartData",
             "apexChartType":"bar",
             "title": "Publications per type timeline",

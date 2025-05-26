@@ -155,7 +155,6 @@ export const getFacet = async ({
          ?id <FACET_LABEL_PREDICATE> ?prefLabel_
          <FACET_LABEL_FILTER>
        }
-     BIND(COALESCE(STR(?prefLabel_), STR(?id)) AS ?prefLabel)
     `
     q = q.replace('<LABELS>', defaultLabelPattern)
     const facetLabelPredicate = facetConfig.facetLabelPredicate

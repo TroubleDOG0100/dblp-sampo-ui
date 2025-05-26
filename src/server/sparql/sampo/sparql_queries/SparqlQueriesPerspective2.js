@@ -31,3 +31,61 @@ export const workProperties =
         BIND(?orcid__id AS ?orcid__dataProviderUrl)
     }
 `
+
+export const top10MostProductiveCreators = `
+select (?id as ?category)
+       (MIN(?creatorName) as ?prefLabel)
+	     (?publicationCount as ?instanceCount)
+{
+  {
+    select ?id 
+           (count(?publ) as ?publicationCount)
+    {
+      <FILTER>
+      VALUES ?facetClass { <FACET_CLASS> }
+      ?id a ?facetClass ;
+          ^dblp:createdBy ?publ .	
+    }
+    GROUP BY ?id
+    HAVING(?publicationCount > 1)
+  }
+  ?id dblp:creatorName ?creatorName .
+}
+GROUP BY ?id ?publicationCount
+ORDER BY desc(?publicationCount)
+LIMIT 10 
+`;
+
+
+export const creatorsWithMostCitedPublications = `
+select (?id as ?category)
+       (MIN(?creatorName) as ?prefLabel)
+	     (?maxCitations as ?instanceCount)
+{
+  {
+    select ?id ?publ (max(?citationCount) as ?maxCitations)
+    {
+      <FILTER>
+      VALUES ?facetClass { <FACET_CLASS> }
+      ?id a ?facetClass ;
+  		  ^dblp:createdBy ?publ .
+      {
+        select ?publ 
+        		(count(?citation) as ?citationCount) {
+          ?publ dblp:omid ?omid .
+          ?citation rdf:type cito:Citation .
+          ?citation cito:hasCitedEntity ?omid .
+      	}
+        GROUP BY ?publ
+      }
+    }
+    GROUP BY ?id ?publ
+    HAVING(?maxCitations > 0)
+  }
+  
+  ?id dblp:creatorName ?creatorName .
+}
+GROUP BY ?id ?maxCitations
+ORDER BY desc(?maxCitations)
+LIMIT 15 
+`;

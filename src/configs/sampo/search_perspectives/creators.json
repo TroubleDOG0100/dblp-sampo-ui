@@ -49,17 +49,41 @@
                 }
             }
         },
-        "export": {
+        "mostProductiveCreators":{
             "tabID": 1,
+            "component": "ApexCharts",
+            "tabPath": "publication_creator_count_diagram",
+            "tabIcon": "ShowChart",
+            "sparqlQuery": "top10MostProductiveCreators",
+            "facetClass": "creators",
+            "resultMapper":"mapPieChart",
+            "createChartData": "createApexBarChartData",
+            "title": "Top 10 creators with most publications",
+            "seriesTitle": "Created publication count",
+            "xaxisTitle": "Creator name",
+            "yaxisTitle": "Total created publications"
+        },
+        "mostCitedCreators":{
+            "tabID": 2,
+            "component": "ApexCharts",
+            "tabPath": "publication_creator_most_cited_diagram",
+            "tabIcon": "ShowChart",
+            "sparqlQuery": "creatorsWithMostCitedPublications",
+            "facetClass": "creators",
+            "resultMapper":"mapPieChart",
+            "createChartData": "createApexBarChartData",
+            "title": "Creators of top 15 most cited publications",
+            "seriesTitle": "Most cited publications citation count",
+            "xaxisTitle": "Creator name",
+            "yaxisTitle": "Total citations of most cited publications"
+        },
+        "export": {
+            "tabID": 3,
             "component": "Export",
             "tabPath": "export",
             "tabIcon": "CloudDownload",
             "resultClass": "publications",
             "facetClass": "publications"
-        },
-        "knowledgeGraphMetadata": {
-            "sparqlQuery": "knowledgeGraphMetadataQuery",
-            "resultMapper": "makeObjectList"
         }
     },
     "properties": [

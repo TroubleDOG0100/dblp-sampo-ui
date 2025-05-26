@@ -16,11 +16,6 @@
                 "id": "en",
                 "label": "English",
                 "filename": "localeEN.json"
-            },
-            {
-                "id": "fi",
-                "label": "English",
-                "filename": "localeFI.json"
             }
         ]
     },
@@ -111,7 +106,7 @@
         "yasguiParams": {
             "contentTypeConstruct": "text/turtle",
             "contentTypeSelect": "application/sparql-results+json",
-            "endpoint": "https://ldf.fi/mmm/sparql",
+            "endpoint": "https://sparql.dblp.org/sparql",
             "requestMethod": "POST",
             "tabTitle": "Exported query"
         }
