@@ -233,7 +233,7 @@ export const mapDynamicCategoryGroupedBarChart = ({sparqlBindings, config}) => {
                                              : getJSValueFromSparqlBinding({ binding: b.xValue })).filter((c, idx, cat) => idx == cat.indexOf(c));
   
   categories.sort((a, b) => a - b);
-
+  
   // Create the series structure
   sparqlBindings.forEach(b => 
   {
@@ -247,7 +247,7 @@ export const mapDynamicCategoryGroupedBarChart = ({sparqlBindings, config}) => {
       series[b.category.value][dataPntGroup] = [];
     }
   });
-  
+
   // Fill the data in series in the same order as categories and fill in any missing category (x-value) values for a series.
   let i = 0;
   while (i < categories.length){
@@ -278,7 +278,7 @@ export const mapDynamicCategoryGroupedBarChart = ({sparqlBindings, config}) => {
     }
 
     if (config && config.fillEmptyValues && i+1 != categories.length && categories[i + 1] - categories[i] > 1)
-      categories.push(categories[i] + 1);
+      categories.splice(i + 1, 0, c + 1);
 
     i++;
   }
@@ -346,7 +346,7 @@ export const convertToCumulativeSumSeries = ({ data, config }) => {
 
     let sum = 0;
     series.forEach(({_, y}, dataPntIdx) => {
-      sum += y;
+      sum += (y || 0);
       series[dataPntIdx].y = sum;
     });
   }

@@ -82,8 +82,8 @@
             "component": "Export",
             "tabPath": "export",
             "tabIcon": "CloudDownload",
-            "resultClass": "publications",
-            "facetClass": "publications"
+            "resultClass": "creators",
+            "facetClass": "creators"
         }
     },
     "properties": [
