@@ -9,7 +9,7 @@
     "baseURI": "https://dblp.org/pid/",
     "URITemplate": "<BASE_URI><LOCAL_ID>",
     "facetClass": "dblp:Creator",
-    "frontPageImage": "main_page/works-452x262.jpg",
+    "frontPageImage": "main_page/aaron-burden-y02jEX_B0O0-unsplash.jpg",
     "searchMode": "faceted-search",
     "enableDynamicLanguageChange": false,
     "defaultActiveFacets": [

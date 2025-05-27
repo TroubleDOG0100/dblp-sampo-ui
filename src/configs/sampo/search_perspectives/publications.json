@@ -9,7 +9,7 @@
     "baseURI": "https://dblp.org/rec/books/acm/",
     "URITemplate": "<BASE_URI><LOCAL_ID>",
     "facetClass": "dblp:Publication",
-    "frontPageImage": "main_page/works-452x262.jpg",
+    "frontPageImage": "main_page/books-2463779_1280.jpg",
     "searchMode": "faceted-search",
     "enableDynamicLanguageChange": false,
     "defaultActiveFacets": [
