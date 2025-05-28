@@ -15,6 +15,10 @@ A semantic portal for Computer Science publication bibliography (https://dblp.or
 * Then command `npm run start-server` can be run with optionally providing the port to which the server must listen through environment variable `SAMPO_UI_EXPRESS_PORT`. If no port is provided, then will listen on port `3001`.
 
 
+The environment variables can be copied from the [sample.env](./sample.env) file into `.env` file and modified appropriately.
+
+
+
 # Sampo-UI
 
 A framework for building user interfaces for semantic portals. 
