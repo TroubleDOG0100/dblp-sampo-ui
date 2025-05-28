@@ -69,7 +69,7 @@ class FacetInfo extends React.Component {
         activeSpatialFilters = true
         spatialFilters[key] = value.spatialFilter._bounds
       }
-      if (has(value, 'textFilter') && value.textFilter !== null) {
+      if (has(value, 'textFilter') && (value.textFilter !== null && value.textFilter !== '')) {
         activeTextFilters = true
         textFilters[key] = value.textFilter
       }
